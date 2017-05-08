@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/11gorizont11/nodejs-api-server#readme",
   "dependencies": {
-    "express": "^4.15.2"
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "mongodb": "^2.2.26",
+    "uuid": "^3.0.1"
   }
 }
