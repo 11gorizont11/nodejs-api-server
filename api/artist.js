@@ -9,6 +9,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
 app.get('/', ArtistService.getAll);
+
+app.post('/', ArtistService.addOne);
+
 app.get('/:id', ArtistService.getById);
+
+app.put('/:id', ArtistService.updateOne);
+
+app.delete('/:id', ArtistService.deleteOne);
 
 export default app;
