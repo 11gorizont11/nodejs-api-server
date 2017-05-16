@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import getAll from '../services/artist/getAll';
+import ArtistService from '../services/artist/artistService';
 
 const app = express();
 
@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
-app.get('/', getAll);
+app.get('/', ArtistService.getAll);
 
 
 export default app;
