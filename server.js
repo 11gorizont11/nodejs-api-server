@@ -4,7 +4,7 @@ import boom from 'boom';
 import express from 'express';
 import bodyParser from 'body-parser';
 import log from './config/logger';
-import db from './models/index';
+import mongoose from './models/index';
 import api from './api';
 
 const app = express();
