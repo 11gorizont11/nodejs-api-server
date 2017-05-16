@@ -1,26 +1,43 @@
 'use strict';
 
-const express = require('express');
-const bodyParser = require('body-parser') ;
-const log4js = require('log4js');
-const db = require('./models/models');
-const ArtistsRoute = require('./models/artists/route');
+import boom from 'boom';
+import express from 'express';
+import bodyParser from 'body-parser';
+import log4js from 'log4js';
+import api from './api';
 
-const app = express();
+// import router from './api/router';
+import blueird from 'bluebird';
+import mongoose from 'mongoose';
+
 
 const logger = log4js.getLogger('app');
+const app = express();
+mongoose.Promise = blueird;
+mongoose.connect('mongodb://localhost/myapi');
+require('./models/artists/model');
+
+const db = mongoose.connection;
+
+db.on('error', (err)=> {
+  logger.error('Mongodb is down!', err);
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.send('Hello API')
 });
 
-app.use('/artists', ArtistsRoute);
+app.use('/api', app.router);
+// app.use(router);
 
-app.listen(3030, function() {
-  logger.info("API Server Started!")
+db.on('open', ()=>{
+  logger.info("Connected to db!");
+  app.listen(3030, function() {
+    logger.info("API Server Started!")
+  });
 });
 
 
@@ -38,11 +55,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     logger.error("Something went wrong:", err);
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
+    res.send(boom.badData(err.message));
   });
 }
 
