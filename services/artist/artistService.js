@@ -12,7 +12,20 @@ const ArtistService = {
                                           .catch(err=> {
                                             logger.error(err);
                                             res.send(boom.badData(err.message));
-                                          })
+                                          }),
+  getById : (req, res, next) => ArtistModel.find({_id: req.params.id})
+    .then(artist => {
+      if (!artist) {
+        throw new Error(
+          `Can not find artist with id ${req.params.id}`
+        );
+      }
+        res.send(artist)
+    })
+    .catch(err => {
+      res.send(boom.badData(err.message));
+      next(err);
+      })
 };
 
 
