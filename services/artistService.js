@@ -1,5 +1,5 @@
 import boom from 'boom';
-import logger from '../../config/logger'
+import logger from '../config/logger'
 const mongoose = require('mongoose');
 const ArtistModel = mongoose.model('Artist');
 
@@ -16,7 +16,7 @@ const ArtistService = {
   getById : (req, res, next) => ArtistModel.find({_id: req.params.id})
                                       .then(artist => {
                                         if (!artist) {
-                                          throw new Error(`Can not find artist with id ${req.params.id}`);
+                                          throw new Error(`Can not find artist with id ${artist.id}`);
                                         }
                                           res.send(artist)
                                       })
@@ -25,7 +25,7 @@ const ArtistService = {
                                         next(err);
                                         }),
   addOne: (req, res, next) => ArtistModel.insertMany({name: req.body.name})
-                                          .then(artist=>{
+                                          .then(artist =>{
                                             if(!artist){
                                               throw new Error('Could not save artist')
                                             }

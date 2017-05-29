@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import ArtistService from '../services/artist/artistService';
+import ArtistService from '../services/artistService';
 
 const app = express();
 

@@ -1,18 +1,14 @@
 import mongoose from 'mongoose';
 import log from '../config/logger';
 import bluebird from 'bluebird';
-import finder from 'fs-finder'
-import ArtistModel from './artists/model';
-import TrackModel from './track/model';
+import ArtistModel from "./artist/model";
+import TrackModel from "./track/model";
+import PlayListModel from "./playlist/model";
 
 mongoose.Promise = bluebird;
+// assert.equal(query.exec().constructor, bluebird);
 
 mongoose.connect('mongodb://localhost/myapi');
-
-
-// finder.from(__dirname).findFiles("model.js").forEach((file)=> {
-//   require(file);
-// });
 
 
 const db = mongoose.connection;
