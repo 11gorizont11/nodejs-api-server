@@ -16,35 +16,48 @@ const PlayListService = {
                                             log.error(err);
                                             res.send(boom.badData(err.message));
                                           }),
-  getById : (req, res, next) => PlayListModel.find({_id: req.params.id})
+  getById : (req, res, next) => PlayListModel.findOne({_id: req.params.id})
                                            .then(playList => {
                                              if (!playList) {
                                                throw new Error(`Can not find playList with id ${playList.id}`);
                                              }
-                                             res.send(playList)
+                                             return playList.populate('tracks')
+                                                          .execPopulate()
+                                                          .then(playList => {
+                                                            res.send(playList);
+                                                          })
                                            })
                                            .catch(err => {
                                              res.send(boom.badData(err.message));
                                              next(err);
                                            }),
-  addOne: (req, res, next) => PlayListModel.insertMany({name: req.body.name,
-                                                        track_ids : req.body.track_ids})
+  addOne: (req, res, next) => PlayListModel.create({name: req.body.name,
+                                                    tracks : req.body.tracks})
                                          .then(playList =>{
                                            if(!playList){
                                              throw new Error('Could not save playList')
                                            }
-                                           res.sendStatus(200);
+                                           return playList.populate('tracks')
+                                                        .execPopulate()
+                                                        .then(playList => {
+                                                          res.send(playList);
+                                                        })
                                          })
                                          .catch(err=>{
                                            res.send(boom.badData(err.message));
                                            next(err);
                                          }),
-  updateOne: (req, res, next) => PlayListModel.findByIdAndUpdate(req.params.id, {name: req.body.name})
+  updateOne: (req, res, next) => PlayListModel.findByIdAndUpdate(req.params.id, {name: req.body.name,
+                                                                                tracks : req.body.tracks})
                                             .then(playList => {
                                               if(!playList){
                                                 throw new Error('Could not update playList')
                                               }
-                                              res.sendStatus(200);
+                                              return playList.populate('tracks')
+                                                             .execPopulate()
+                                                             .then(playList => {
+                                                               res.send(playList);
+                                                             })
                                             })
                                             .catch(err => {
                                               res.send(boom.badRequest(err.message));
