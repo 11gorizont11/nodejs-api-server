@@ -20,7 +20,9 @@ const TrackService = {
                                              if (!track) {
                                                throw new Error(`Can not find track with Id - ${req.params.id}`);
                                              }
-                                             res.send(track)
+
+                                             return track.populate({path:'artist_id', model:'Artist'}).execPopulate().then(track => {
+                                               res.send(track)})
                                            })
                                            .catch(err => {
                                              res.send(boom.badData(err.message));
@@ -33,11 +35,7 @@ const TrackService = {
                                                     })
                                                     .then(track => {
                                                       log.info('Track was saved successfully!');
-                                                      return ArtistModel.findOne({_id:track.artist_id})
-                                                                        .populate({path:'tracks', model: 'Track'})
-                                                                        .execPopulate().then(artist=>{
-                                                                        console.log(artist);
-                                                        }).catch(err=>res.send(boom.badData(err.message)))
+                                                      res.sendStatus(200)
                                                     })
                                                     .catch(err=>res.send(boom.badData(err.message))),
 

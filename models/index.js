@@ -1,12 +1,14 @@
 import mongoose from 'mongoose';
 import log from '../config/logger';
 import bluebird from 'bluebird';
+import assert from "assert"
 import ArtistModel from "./artist/model";
 import TrackModel from "./track/model";
 import PlayListModel from "./playlist/model";
 
+
 mongoose.Promise = bluebird;
-// assert.equal(query.exec().constructor, bluebird);
+//assert.equal(query.exec().constructor, bluebird);
 
 mongoose.connect('mongodb://localhost/myapi');
 

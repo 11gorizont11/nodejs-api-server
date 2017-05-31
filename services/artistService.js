@@ -13,12 +13,18 @@ const ArtistService = {
                                             logger.error(err);
                                             res.send(boom.badData(err.message));
                                           }),
-  getById : (req, res, next) => ArtistModel.find({_id: req.params.id})
-                                      .then(artist => {
-                                        if (!artist) {
-                                          throw new Error(`Can not find artist with id ${artist.id}`);
-                                        }
-                                          res.send(artist)
+  getById : (req, res, next) => ArtistModel.findOne({_id: req.params.id})
+                                        .then(artist => {
+                                          if (!artist) {
+                                            throw new Error(`Can not find artist with id ${artist.id}`);
+                                          }
+                                          return artist.populate('tracks')
+                                                       .execPopulate()
+                                                       .then(artist => {
+                                                         res.send(artist);
+                                                       })
+
+
                                       })
                                       .catch(err => {
                                         res.send(boom.badData(err.message));
@@ -35,7 +41,8 @@ const ArtistService = {
                                             res.send(boom.badData(err.message));
                                             next(err);
                                           }),
-  updateOne: (req, res, next) => ArtistModel.findByIdAndUpdate(req.params.id, {name: req.body.name})
+  updateOne: (req, res, next) => ArtistModel.findByIdAndUpdate(req.params.id, {name: req.body.name,
+                                                                              tracks : req.body.tracks})
                                             .then(artist => {
                                               if(!artist){
                                                 throw new Error('Could not update artist')
